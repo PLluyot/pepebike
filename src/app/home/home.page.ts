@@ -8,6 +8,7 @@ import {BLE} from '@ionic-native/ble/ngx';
 })
 export class HomePage {
   devices:any[] = [];
+  estado: string;
   constructor(private ble: BLE, private ngZone: NgZone) {}
   
   Scan(){
@@ -22,6 +23,15 @@ export class HomePage {
       console.log(device)
     })
   }
-
+  estaOK(){
+    // console.log(this.ble.isEnabled);
+  this.ble.isEnabled().then(function() {
+    this.estado="Bluetooth is enabled";
+},
+function() {
+  this.estado="Bluetooth is *not* enabled";
+});
+  // this.estado="hola";
+  }
 
 }

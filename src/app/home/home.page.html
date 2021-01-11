@@ -10,8 +10,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
  <ion-list>
+  <ion-button (click)="estaOK()" slot="start">
+    <ion-icon name="alert"></ion-icon>
+    <p>Comprobar estado: {{estado}}</p>
+  </ion-button>
   <ion-card-content ion-item *ngfor="let device of devices">
     <p>{{device.name || "Sin nombre"}}</p>
     <p>{{device.id}}</p>
