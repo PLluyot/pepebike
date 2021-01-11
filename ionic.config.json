@@ -1,5 +1,7 @@
 {
   "name": "pepebike",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
