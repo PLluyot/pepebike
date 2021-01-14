@@ -1,5 +1,7 @@
+import { BLE } from '@ionic-native/ble/ngx';
 import { Component, NgZone } from '@angular/core';
-import {BLE} from '@ionic-native/ble/ngx';
+import { ToastController } from '@ionic/angular';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,31 +9,71 @@ import {BLE} from '@ionic-native/ble/ngx';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  devices:any[] = [];
-  estado: string;
-  constructor(private ble: BLE, private ngZone: NgZone) {}
-  
-  Scan(){
-    this.devices=[];
-    this.ble.scan([],15).subscribe(device => this.onDeviceDiscovered(device));
-  }
-  
-  onDeviceDiscovered(device){
-    console.log('Discovered' + JSON.stringify(device,null,2));
-    this.ngZone.run(()=>{
-      this.devices.push(device)
-      console.log(device)
-    })
-  }
-  estaOK(){
-    // console.log(this.ble.isEnabled);
-  this.ble.isEnabled().then(function() {
-    this.estado="Bluetooth is enabled";
-},
-function() {
-  this.estado="Bluetooth is *not* enabled";
-});
-  // this.estado="hola";
+  devices: any[] = [];
+  statusMessage: string;
+  deviceMode = true;
+
+  constructor(
+    public router: Router,
+    private toastCtrl: ToastController,
+    private ble: BLE,
+    private ngZone: NgZone
+  ) {}
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter');
+    this.scan();
   }
 
+  scan() {
+    this.setStatus('Escaneando dispositivos Bluetooth LE (bajo consumo)');
+    this.devices = []; // clear list
+
+    this.ble.scan([], 5).subscribe(
+      device => this.onDeviceDiscovered(device),
+      error => this.scanError(error)
+    );
+
+    setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
+  }
+
+  onDeviceDiscovered(device) {
+    console.log('Discovered ' + JSON.stringify(device, null, 2));
+    this.ngZone.run(() => {
+      this.devices.push(device);
+    });
+  }
+
+  // If location permission is denied, you'll end up here
+  async scanError(error) {
+    this.setStatus('Error ' + error);
+    const toast = await this.toastCtrl.create({
+      message: 'Error escaneando dispositivos Bluetooth de bajo consumo',
+      position: 'middle',
+      duration: 5000
+    });
+    toast.present();
+  }
+
+  setStatus(message) {
+    console.log(message);
+    this.ngZone.run(() => {
+      this.statusMessage = message;
+    });
+  }
+
+  deviceSelected(device: any) {
+    this.statusMessage = "conectando al dispositivo...";
+    console.log(JSON.stringify(device) + ' selected');
+    /*  let navigationExtras: NavigationExtras = {
+          queryParams: {
+              special: JSON.stringify(device)
+          }
+      }
+      this.router.navigate(['details'], navigationExtras);*/
+  }
+
+  mostrarMsg(){
+    this.statusMessage ="he pulsado en una card";
+  }
 }
