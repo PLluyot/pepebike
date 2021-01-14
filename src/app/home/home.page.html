@@ -1,25 +1,66 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Testing BLE
+  <ion-toolbar color="primary">
+    <ion-title >
+      Probando BLE - P.Lluyot
     </ion-title>
-    <ion-button (click)="Scan()" slot="end">
+    <ion-button (click)="scan()" scan="" slot="end" color="light">
       <ion-icon name="Bluetooth"></ion-icon>
       <p>Scan</p>
     </ion-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
- <ion-list>
-  <ion-button (click)="estaOK()" slot="start">
-    <ion-icon name="alert"></ion-icon>
-    <p>Comprobar estado: {{estado}}</p>
-  </ion-button>
-  <ion-card-content ion-item *ngfor="let device of devices">
-    <p>{{device.name || "Sin nombre"}}</p>
-    <p>{{device.id}}</p>
-    <p>RSSI: {{device.rssi}}</p>
-  </ion-card-content>
- </ion-list>
+<ion-content >
+  <ion-card color="light" (click)="mostrarMsg()">
+    <ion-card-header>
+      <ion-card-title detail>Dispositivo prueba
+        <ion-icon name="bluetooth"></ion-icon>
+      </ion-card-title>
+      <ion-card-subtitle>Identificador - RSSI: valor rssi</ion-card-subtitle>
+    </ion-card-header>
+    <!-- <ion-card-content>
+      <ion-item>Identificador</ion-item>
+      <ion-item detail>Conectar</ion-item>
+    </ion-card-content> -->
+  </ion-card>
+  <ion-card *ngFor="let device of devices" color="light" (click)="deviceSelected(device)">
+    <ion-card-header>
+      <ion-card-title>{{device.name || "--sin nombre--"}}
+        <ion-icon name="bluetooth"></ion-icon>
+      </ion-card-title>
+      <ion-card-subtitle>id: {{device.id}} - RSSI: {{device.rssi}}</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- <ion-grid>
+    <ion-row>
+      <ion-col>---</ion-col>
+      <ion-col>NOMBRE</ion-col>
+      <ion-col>UID</ion-col>
+      <ion-col>RSSI</ion-col>
+    </ion-row>
+    <ion-row class="ion-align-items-start" *ngFor="let device of devices"
+    >
+      <ion-col >
+        <ion-button click="" device="" deviceSelected="">
+          <ion-icon name="arrow-dropright-circle"></ion-icon>
+          <p>Conectar</p>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        {{device.name || "Sin nombre"}}</ion-col>
+      <ion-col>{{device.id}}</ion-col>
+      <ion-col>{{device.rssi}}</ion-col>
+    </ion-row>
+  </ion-grid>
+   -->
+
+ 
+ <ion-footer>
+  <ion-toolbar >
+    <ion-item color="dark">
+    <ion-label>{{ statusMessage }}</ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
 </ion-content>
